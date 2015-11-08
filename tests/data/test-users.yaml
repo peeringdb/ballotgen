@@ -2,6 +2,6 @@
 - email: user@example.com
   name: Example User
 
-- email: second@example.com
+- email: second.user@example.com
   name: ''
 

@@ -12,7 +12,7 @@ test_members = [
     'email': u'second@example.com',
     'name': u''
     }
-    ]
+]
 test_members_emails = set([u'second@example.com', u'user@example.com'])
 
 test_users = [
@@ -21,10 +21,19 @@ test_users = [
     'name': u'Example User'
     },
     {
-    'email': u'second@example.com',
+    'email': u'second.user@example.com',
     'name': u''
     }
-    ]
+]
+
+mapping = {
+    'email': {
+        'second@example.com': 'second.user@example.com',
+    },
+    'org': {
+        'example.com': 'user',
+    },
+}
 
 
 def test_get_gov_list():
@@ -50,4 +59,20 @@ def test_build_set():
 
 
 def test_voters():
-    pass
+    expected = set(['user@example.com', 'second.user@example.com'])
+    found = ballotgen.find_voters(test_members, test_users, mapping)
+    print 'XXXX', found
+    assert expected == found
+
+    bad_mapping = {'email': {'second@example.com': 'nonexistant'}}
+    with pytest.raises(ValueError):
+        ballotgen.find_voters(test_members, test_users, bad_mapping)
+
+
+def test_reduce_org():
+    bad_mapping = {'org': {'example.com': 'nonexistant'}}
+    with pytest.raises(ValueError):
+        ballotgen.reduce_org(test_members_emails, bad_mapping)
+
+    assert set(['user@example.com']) == ballotgen.reduce_org(test_members_emails, mapping)
+

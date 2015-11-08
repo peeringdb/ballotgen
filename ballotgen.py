@@ -2,6 +2,7 @@
 
 from bs4 import BeautifulSoup
 import click
+from collections import defaultdict
 import munge
 import munge.codec.all
 import re
@@ -100,9 +101,11 @@ def find_voters(members, users, mapping):
     for email in left:
         # check mapping file
         if email in map_emails:
-            if email not in user_emails:
-                ValueError("mapping %s -> %s not found", email, map_emails[email])
+            pdb_email = map_emails[email]
+            if pdb_email not in user_emails:
+                raise ValueError("mapping %s -> %s not found", email, pdb_email)
             mapped.add(email)
+            found.add(pdb_email)
 
         # check for +something and remove it
         (new, count) = re.subn("\+\w+@", "@", email)
@@ -123,7 +126,33 @@ def find_voters(members, users, mapping):
     status_msg("%d name matches" % (len(name_matches),))
 
     status_msg("%d unhandled: %s" % (len(left), str(left)))
+    return found
 
+def reduce_org(found, mapping):
+    map_org = mapping['org']
+    voters = set()
+    dupes = set()
+
+    by_domain = defaultdict(set)
+    for email in found:
+        user, domain = email.split('@')
+        by_domain[domain].add(user)
+
+    for domain, users in by_domain.items():
+        if len(users) == 1:
+            voters.add(users.pop())
+            continue
+        if domain in map_org:
+            email = "%s@%s" % (map_org[domain], domain)
+            if email not in found:
+                raise ValueError("org mapping for %s points to unknown email %s"
+                    % (domain, email))
+            voters.add(email)
+        else:
+            status_msg("multi users for domain %s: %s" % (domain, users))
+
+    return voters
+    print by_domain
 
 @click.command()
 @click.option('--list-file', help='use this file instead of getting live')
@@ -149,7 +178,8 @@ def ballotgen(list_file, list_passwd, map_file, users_file):
 
     mapping = get_mapping_file(map_file)
 
-    find_voters(members, users, mapping)
+    found = find_voters(members, users, mapping)
+    reduce_org(found, mapping)
 
 if __name__ == '__main__':
     ballotgen()
