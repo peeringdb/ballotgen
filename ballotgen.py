@@ -103,7 +103,7 @@ def find_voters(members, users, mapping):
         if email in map_emails:
             pdb_email = map_emails[email]
             if pdb_email not in user_emails:
-                raise ValueError("mapping %s -> %s not found", email, pdb_email)
+                raise ValueError("mapping %s -> %s not found" % (email, pdb_email))
             mapped.add(email)
             found.add(pdb_email)
 
