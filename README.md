@@ -11,7 +11,10 @@
     email:
       <pdb-gov email>: <pdb2 user email>
     org:
-      <domain>: <voting user>
+      # if there are two addresses, user.a@example.com and user.b@example.com
+      # to make user.a the voting member, do
+      # example.com: user.a
+      <domain>: <voting mailbox name>
 
 ### usage
     ./ballotgen.py --help
