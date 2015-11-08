@@ -119,12 +119,10 @@ def find_voters(members, users, mapping):
         name = member_idx[email]
         if name in user_idx:
             print "  %s: %s" % (user_idx[name], email)
-            found.add(user_idx[name])
             name_matches.add(email)
+    status_msg("%d name matches" % (len(name_matches),))
 
-    left -= name_matches
-    status_msg("%d name matches, leaving %d" % (len(name_matches), len(left)))
-    print "unhandled:", left
+    status_msg("%d unhandled: %s" % (len(left), str(left)))
 
 
 @click.command()
