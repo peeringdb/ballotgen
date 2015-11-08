@@ -89,7 +89,7 @@ def find_voters(members, users, mapping):
     map_emails = mapping['email']
 
     found = member_emails & user_emails
-    status_msg("direct matches %d/%d" % (len(found), len(member_emails)))
+    status_msg("direct matches %d of %d" % (len(found), len(member_emails)))
 
     left = member_emails - found
     name_matches = set()
@@ -118,7 +118,7 @@ def find_voters(members, users, mapping):
     for email in left:
         name = member_idx[email]
         if name in user_idx:
-            print "  %s: %s" % (user_idx[name], email)
+            print "  %s: %s" % (email, user_idx[name])
             name_matches.add(email)
     status_msg("%d name matches" % (len(name_matches),))
 
