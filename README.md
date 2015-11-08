@@ -10,6 +10,8 @@
 ### map file format
     email:
       <pdb-gov email>: <pdb2 user email>
+    org:
+      <domain>: <voting user>
 
 ### usage
     ./ballotgen.py --help

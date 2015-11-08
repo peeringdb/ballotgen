@@ -61,7 +61,6 @@ def test_build_set():
 def test_voters():
     expected = set(['user@example.com', 'second.user@example.com'])
     found = ballotgen.find_voters(test_members, test_users, mapping)
-    print 'XXXX', found
     assert expected == found
 
     bad_mapping = {'email': {'second@example.com': 'nonexistant'}}
