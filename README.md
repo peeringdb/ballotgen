@@ -1,5 +1,7 @@
 # ballotgen
 
+Script to read from both the pdb-gov list and the PeeringDB user database and generate a ballot list for voting. Uses Python 2.7.
+
 ### install
     pip install -r facsimile/requirements.txt
 
